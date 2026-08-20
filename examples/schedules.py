@@ -182,10 +182,14 @@ def stepwise_schedule(
     raise ValueError("`boundaries` and `decay_factors` must have the same "
                      "length.")
 
+  # Convert to an array so that the elementwise comparison below works for
+  # Python sequences (e.g. lists) as well as arrays.
+  boundaries = jnp.asarray(boundaries)
+
   values = jnp.concatenate(
       [jnp.array([1.0]), jnp.array(decay_factors)]) * init_value
 
-  index = jnp.sum(boundaries <= count)  # pyrefly: ignore[unsupported-operation]
+  index = jnp.sum(boundaries <= count)
 
   return jnp.take(values, index)
 
